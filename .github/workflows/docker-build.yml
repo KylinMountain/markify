@@ -1,0 +1,33 @@
+name: Docker Image CI
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    env:
+      IMAGE_NAME: ${{ github.event.repository.name }}
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Remove 'v' prefix from tag
+      id: tag_name
+      run: |
+        TAG_NAME=${GITHUB_REF#refs/tags/}
+        TAG_NAME=${TAG_NAME#v}
+        echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
+
+    - name: Log in to DockerHub
+      run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG_NAME }}
+
+    - name: Push the Docker image
+      run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.TAG_NAME }}
