@@ -84,8 +84,6 @@ docker run -d -p 20926:20926 wsjcuhk/markify:0.0.1
 - 自动打包为Docker镜像
 
 ## 赞助我
-开源不易，请我喝杯咖啡！
-![sponsor](assets/sponsor.JPG)
 有专业指导需求，可以加入我的知识星球，我会提供专业的技术指导。
 ![zsxq](assets/zsxq.JPG)
 
